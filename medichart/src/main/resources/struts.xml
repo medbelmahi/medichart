@@ -1,0 +1,527 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+        "http://struts.apache.org/dtds/struts-2.3.dtd">
+<struts>
+	<constant name="struts.devMode" value="false" />
+	<constant name="struts.action.extension" value="," />
+	<constant name="struts.ui.theme" value="simple" />
+
+	<package name="default_for_interceptors" namespace="/"
+		extends="struts-default">
+		<interceptors>
+			<interceptor name="sessionCheckerInterceptor"
+				class="ma.meditel.reporting.web.interceptor.SessionCheckerInterceptor"></interceptor>
+			<interceptor name="sessionAdminCheckerInterceptor"
+				class="ma.meditel.reporting.web.interceptor.SessionAdminCheckerInterceptor"></interceptor>
+			<interceptor name="systemStatusCheckerInterceptor"
+				class="ma.meditel.reporting.web.interceptor.SystemStatusCheckerInterceptor"></interceptor>
+
+			<interceptor-stack name="costumStack_sessionChecker">
+				<interceptor-ref name="sessionCheckerInterceptor" />
+				<interceptor-ref name="systemStatusCheckerInterceptor" />
+				<interceptor-ref name="defaultStack" />
+			</interceptor-stack>
+			<interceptor-stack name="costumStack_sessionAdminChecker">
+				<interceptor-ref name="sessionAdminCheckerInterceptor" />
+				<interceptor-ref name="systemStatusCheckerInterceptor" />
+				<interceptor-ref name="defaultStack" />
+			</interceptor-stack>
+			<interceptor-stack name="costumStack_systemStatusCheckerChecker">
+				<interceptor-ref name="systemStatusCheckerInterceptor" />
+				<interceptor-ref name="defaultStack" />
+			</interceptor-stack>
+		</interceptors>
+
+		<global-results>
+			<result name="system_blocked">/pages/system_bocked.jsp</result>
+		</global-results>
+
+	</package>
+
+	<package name="default" namespace="/" extends="default_for_interceptors, json-default">
+		<default-action-ref name="index" />
+
+		<action name="test" class="ma.meditel.reporting.web.TestAction">
+			<result name="success">/pages/test.jsp</result>
+			<result name="input">/pages/test.jsp</result>
+		</action>
+
+		<action name="index">
+			<interceptor-ref name="costumStack_sessionChecker" />
+			<result>/pages/index.jsp</result>
+			<result name="login" type="redirectAction">login</result>
+		</action>
+
+		<action name="login" class="ma.meditel.reporting.web.LoginAction">
+			<result name="input">/pages/login.jsp</result>
+			<result name="success" type="redirectAction">index</result>
+		</action>
+
+		<action name="logout" class="ma.meditel.reporting.web.LoginAction" method="logout">
+			<result name="none" type="redirectAction">login</result>
+		</action>
+		
+	</package>
+
+	<package name="users" namespace="/users" extends="default_for_interceptors">
+		<default-action-ref name="index" />
+
+		<global-results>
+			<result name="login" type="redirectAction">
+				<param name="namespace">/</param>
+				<param name="actionName">login</param>
+			</result>
+			<result name="error" type="redirectAction">
+				<param name="namespace">/</param>
+				<param name="actionName">index</param>
+			</result>
+		</global-results>
+
+		<action name="index">
+			<interceptor-ref name="costumStack_sessionAdminChecker" />
+			<result>/pages/users.jsp</result>
+		</action>
+		<action name="list" class="ma.meditel.reporting.web.admin.UsersListAction">
+			<interceptor-ref name="costumStack_sessionAdminChecker" />
+			<result name="none">/pages/users_list.jsp</result>
+		</action>
+
+		<action name="info" class="ma.meditel.reporting.web.admin.UsersInfoAction">
+			<interceptor-ref name="costumStack_sessionAdminChecker" />
+			<result name="success">/pages/users_info.jsp</result>
+			<result name="input" type="redirectAction">
+				<param name="actionName">list</param>
+			</result>
+		</action>
+
+		<action name="edit" class="ma.meditel.reporting.web.admin.UsersEditAction">
+			<interceptor-ref name="costumStack_sessionAdminChecker" />
+			<result name="none" type="redirectAction">
+				<param name="actionName">list</param>
+			</result>
+			<result name="success">/pages/users_info.jsp</result>
+			<result name="input">/pages/users_info.jsp</result>
+		</action>
+
+		<action name="delete" class="ma.meditel.reporting.web.admin.UsersDeleteAction">
+			<interceptor-ref name="costumStack_sessionAdminChecker" />
+			<result name="none" type="redirectAction">
+				<param name="actionName">list</param>
+			</result>
+			<result name="success" type="redirectAction">
+				<param name="actionName">list</param>
+			</result>
+			<result name="input" type="redirectAction">
+				<param name="actionName">list</param>
+			</result>
+		</action>
+
+		<action name="add" class="ma.meditel.reporting.web.admin.UsersAddAction">
+			<interceptor-ref name="costumStack_sessionAdminChecker" />
+			<result name="none">/pages/users_add.jsp</result>
+			<result name="success">/pages/users_add.jsp</result>
+			<result name="input">/pages/users_add.jsp</result>
+		</action>
+		
+		<action name="editprofil" class="ma.meditel.reporting.web.UserEditProfilAction">
+			<interceptor-ref name="costumStack_sessionChecker" />
+			<result name="none">/pages/users_edit.jsp</result>
+			<result name="success">/pages/users_edit.jsp</result>
+			<result name="input">/pages/users_edit.jsp</result>
+		</action>
+	</package>
+
+	<package name="nodes" namespace="/nodes" extends="default_for_interceptors">
+		<default-action-ref name="index" />
+
+		<global-results>
+			<result name="login" type="redirectAction">
+				<param name="namespace">/</param>
+				<param name="actionName">login</param>
+			</result>
+			<result name="error" type="redirectAction">
+				<param name="namespace">/</param>
+				<param name="actionName">index</param>
+			</result>
+		</global-results>
+
+		<action name="index">
+			<interceptor-ref name="costumStack_sessionAdminChecker" />
+			<result>/pages/nodes.jsp</result>
+		</action>
+
+		<action name="add" class="ma.meditel.reporting.web.admin.NodesAddAction">
+			<interceptor-ref name="costumStack_sessionAdminChecker" />
+			<result name="none">/pages/nodes_add.jsp</result>
+			<result name="success">/pages/nodes_add.jsp</result>
+			<result name="input">/pages/nodes_add.jsp</result>
+		</action>
+		<action name="remove" class="ma.meditel.reporting.web.admin.NodesRemoveAction">
+			<interceptor-ref name="costumStack_sessionAdminChecker" />
+			<result name="none">/pages/nodes_remove.jsp</result>
+			<result name="success">/pages/nodes_remove.jsp</result>
+			<result name="input">/pages/nodes_remove.jsp</result>
+		</action>
+
+		<action name="load" class="ma.meditel.reporting.web.admin.NodesLoadAction">
+			<interceptor-ref name="costumStack_sessionAdminChecker" />
+			<result name="none">/pages/nodes_load.jsp</result>
+			<result name="success">/pages/nodes_load.jsp</result>
+			<result name="input">/pages/nodes_load.jsp</result>
+		</action>
+		
+		<action name="deleteAll" class="ma.meditel.reporting.web.admin.NodeRemoveAllAction">
+			<interceptor-ref name="costumStack_sessionAdminChecker" />
+			<result name="none">/pages/nodes_removeAll.jsp</result>
+			<result name="success">/pages/nodes_removeAll.jsp</result>
+			<result name="input">/pages/nodes_removeAll.jsp</result>
+		</action>
+	</package>
+
+	<package name="interfaces" namespace="/interfaces" extends="default_for_interceptors">
+		<default-action-ref name="index" />
+
+		<global-results>
+			<result name="login" type="redirectAction">
+				<param name="namespace">/</param>
+				<param name="actionName">login</param>
+			</result>
+			<result name="error" type="redirectAction">
+				<param name="namespace">/</param>
+				<param name="actionName">index</param>
+			</result>
+		</global-results>
+
+		<action name="index">
+			<interceptor-ref name="costumStack_sessionAdminChecker" />
+			<result>/pages/interfaces.jsp</result>
+		</action>
+
+		<action name="add" class="ma.meditel.reporting.web.admin.InterfacesAddAction">
+			<interceptor-ref name="costumStack_sessionAdminChecker" />
+			<result name="none">/pages/interfaces_add.jsp</result>
+			<result name="success">/pages/interfaces_add.jsp</result>
+			<result name="input">/pages/interfaces_add.jsp</result>
+		</action>
+		
+		<action name="remove" class="ma.meditel.reporting.web.admin.InterfacesRemoveAction">
+			<interceptor-ref name="costumStack_sessionAdminChecker" />
+			<result name="none">/pages/interfaces_remove.jsp</result>
+			<result name="success">/pages/interfaces_remove.jsp</result>
+			<result name="input">/pages/interfaces_remove.jsp</result>
+		</action>
+
+		<action name="load" class="ma.meditel.reporting.web.admin.InterfacesLoadAction">
+			<interceptor-ref name="costumStack_sessionAdminChecker" />
+			<result name="none">/pages/interfaces_load.jsp</result>
+			<result name="success">/pages/interfaces_load.jsp</result>
+			<result name="input">/pages/interfaces_load.jsp</result>
+		</action>
+	
+		<action name="deleteAll" class="ma.meditel.reporting.web.admin.InterfacesRemoveAllAction">
+			<interceptor-ref name="costumStack_sessionAdminChecker" />
+			<result name="none">/pages/interfaces_removeAll.jsp</result>
+			<result name="success">/pages/interfaces_removeAll.jsp</result>
+			<result name="input">/pages/interfaces_removeAll.jsp</result>
+		</action>
+		
+		<action name="getAllActivated" class="ma.meditel.reporting.web.admin.InterfacesGetAllTheInterfaces">
+			<interceptor-ref name="costumStack_sessionAdminChecker" />
+			<result name="none">/pages/interfaces_activer.jsp</result>
+			<result name="success">/pages/interfaces_activer.jsp</result>
+			<result name="input">/pages/interfaces_activer.jsp</result>
+		</action>
+		
+		<action name="autorizedAlias" class="ma.meditel.reporting.web.admin.InterfacesAutorizedAlias">
+			<interceptor-ref name="costumStack_sessionAdminChecker" />
+			<result name="none">/pages/interfaces_autorizedAlias.jsp</result>
+			<result name="success">/pages/interfaces_autorizedAlias.jsp</result>
+			<result name="input">/pages/interfaces_autorizedAlias.jsp</result>
+		</action>
+		<action name="autorizedAliasRemove" class="ma.meditel.reporting.web.admin.InterfacesAutorizedAlias" method="remove">
+			<interceptor-ref name="costumStack_sessionAdminChecker" />
+			<result name="success" type="redirectAction">autorizedAlias</result>
+		</action>
+		<action name="autorizedAliasAdd" class="ma.meditel.reporting.web.admin.InterfacesAutorizedAlias" method="add">
+			<interceptor-ref name="costumStack_sessionAdminChecker" />
+			<result name="success" type="redirectAction">autorizedAlias</result>
+		</action>
+	</package>
+	
+	<package name="interfacesPhysics" namespace="/interfacesPhysics" extends="default_for_interceptors">
+		<default-action-ref name="index" />
+
+		<global-results>
+			<result name="login" type="redirectAction">
+				<param name="namespace">/</param>
+				<param name="actionName">login</param>
+			</result>
+			<result name="error" type="redirectAction">
+				<param name="namespace">/</param>
+				<param name="actionName">index</param>
+			</result>
+		</global-results>
+
+		<action name="index">
+			<interceptor-ref name="costumStack_sessionAdminChecker" />
+			<result>/pages/interfacesPhysics.jsp</result>
+		</action>
+
+		<action name="add" class="ma.meditel.reporting.web.admin.InterfacesPhysicsAddAction">
+			<interceptor-ref name="costumStack_sessionAdminChecker" />
+			<result name="none">/pages/interfacesPhysics_add.jsp</result>
+			<result name="success">/pages/interfacesPhysics_add.jsp</result>
+			<result name="input">/pages/interfacesPhysics_add.jsp</result>
+		</action>
+		<action name="remove" class="ma.meditel.reporting.web.admin.InterfacesPhysicsRemoveAction">
+			<interceptor-ref name="costumStack_sessionAdminChecker" />
+			<result name="none">/pages/interfacesPhysics_remove.jsp</result>
+			<result name="success">/pages/interfacesPhysics_remove.jsp</result>
+			<result name="input">/pages/interfacesPhysics_remove.jsp</result>
+		</action>
+
+		<action name="deleteAll" class="ma.meditel.reporting.web.admin.InterfacesPhysicsRemoveAllAction">
+			<interceptor-ref name="costumStack_sessionAdminChecker" />
+			<result name="none">/pages/interfacesPhysics_removeAll.jsp</result>
+			<result name="success">/pages/interfacesPhysics_removeAll.jsp</result>
+			<result name="input">/pages/interfacesPhysics_removeAll.jsp</result>
+		</action>
+	</package>
+	
+	<package name="system" namespace="/system" extends="default_for_interceptors">
+		<default-action-ref name="index" />
+
+		<global-results>
+			<result name="login" type="redirectAction">
+				<param name="namespace">/</param>
+				<param name="actionName">login</param>
+			</result>
+			<result name="error" type="redirectAction">
+				<param name="namespace">/</param>
+				<param name="actionName">index</param>
+			</result>
+		</global-results>
+
+		<action name="index">
+			<interceptor-ref name="costumStack_sessionAdminChecker" />
+			<result></result>
+		</action>
+
+		<action name="status" class="ma.meditel.reporting.web.admin.SystemStatusAction">
+			<interceptor-ref name="costumStack_sessionAdminChecker" />
+			<result name="none">/pages/system_status.jsp</result>
+			<result name="success">/pages/system_status.jsp</result>
+			<result name="input">/pages/system_status.jsp</result>
+		</action>
+		<action name="ftp" class="ma.meditel.reporting.web.admin.SystemFTPAction">
+			<interceptor-ref name="costumStack_sessionAdminChecker" />
+			<result name="none">/pages/system_ftp.jsp</result>
+			<result name="success">/pages/system_ftp.jsp</result>
+			<result name="input">/pages/system_ftp.jsp</result>
+		</action>
+		<action name="ftpmerge" class="ma.meditel.reporting.web.admin.SystemFTPMergeAction">
+			<interceptor-ref name="costumStack_sessionAdminChecker" />
+			<result name="none">/pages/system_ftp.jsp</result>
+			<result name="success">/pages/system_ftp.jsp</result>
+			<result name="input">/pages/system_ftp.jsp</result>
+		</action>
+		
+	</package>
+	
+	<package name="traffics" namespace="/traffics" extends="default_for_interceptors">
+		<default-action-ref name="index" />
+
+		<global-results>
+			<result name="login" type="redirectAction">
+				<param name="namespace">/</param>
+				<param name="actionName">login</param>
+			</result>
+			<result name="error" type="redirectAction">
+				<param name="namespace">/</param>
+				<param name="actionName">index</param>
+			</result>
+		</global-results>
+
+		<action name="index">
+			<interceptor-ref name="costumStack_sessionChecker" />
+			<result></result>
+		</action>
+
+		<action name="inOutCompare" class="ma.meditel.reporting.web.TrafficsInOutCompareAction">
+			<interceptor-ref name="costumStack_sessionChecker" />
+			<result name="none">/pages/traffics_in_out_compare.jsp</result>
+			<result name="success">/pages/traffics_in_out_compare.jsp</result>
+			<result name="input">/pages/traffics_in_out_compare.jsp</result>
+		</action>
+		
+		<action name="perClassCompare" class="ma.meditel.reporting.web.TrafficsPerClassCompareAction">
+			<interceptor-ref name="costumStack_sessionChecker" />
+			<result name="none">/pages/traffics_per_class_compare.jsp</result>
+			<result name="success">/pages/traffics_per_class_compare.jsp</result>
+			<result name="input">/pages/traffics_per_class_compare.jsp</result>
+		</action>
+		
+		<action name="inOutGraphe" class="ma.meditel.reporting.web.TrafficsInOutGrapheAction">
+			<interceptor-ref name="costumStack_sessionChecker" />
+			<result name="none">/pages/graphe.jsp</result>
+			<result name="GrapheNotification">/pages/grapheSaturation.jsp</result>
+			<result name="success">/pages/graphe.jsp</result>
+			<result name="input">/pages/graphe.jsp</result>
+		</action>
+		
+		<action name="perClassGraphe" class="ma.meditel.reporting.web.TrafficsPerClassGrapheAction">
+			<interceptor-ref name="costumStack_sessionChecker" />
+			<result name="none">/pages/graphe.jsp</result>
+			<result name="GrapheNotification">/pages/grapheSaturation.jsp</result>
+			<result name="success">/pages/graphe.jsp</result>
+			<result name="input">/pages/graphe.jsp</result>
+		</action>
+		
+		<action name="notificationError" class="ma.meditel.reporting.web.NotificationListAction">
+			<interceptor-ref name="costumStack_sessionChecker" />
+			<result name="none">/pages/saturationList.jsp</result>
+			<result name="success">/pages/saturationList.jsp</result>
+			<result name="input">/pages/saturationList.jsp</result>
+		</action>
+		
+		<!-- <action name="generateTheCsvFile" class="ma.meditel.reporting.web.CsvFileDownloadAction">
+			<interceptor-ref name="costumStack_sessionChecker" />
+			<result name="none">/pages/telechargementCsvFile.jsp</result>
+			<result name="success">/pages/telechargementCsvFile.jsp</result>
+			<result name="input">/pages/telechargementCsvFile.jsp</result>
+			
+		</action> -->
+		
+		<action name="generateTheCsvFile" class="ma.meditel.reporting.web.CsvFileDownloadAction">
+		<result name="success" type="stream">
+		  <param name="contentType">application/octet-stream</param>
+		  <param name="inputName">fileInputStream</param>
+		  <param name="contentDisposition">attachment;filename=${filename}</param>
+		  <param name="bufferSize">1024</param>
+		</result>
+	   </action>
+		
+	</package>
+	
+	<package name="streams" namespace="/streams" extends="default_for_interceptors">
+		<default-action-ref name="index" />
+
+		<global-results>
+			<result name="login" type="redirectAction">
+				<param name="namespace">/</param>
+				<param name="actionName">login</param>
+			</result>
+			<result name="error" type="redirectAction">
+				<param name="namespace">/</param>
+				<param name="actionName">index</param>
+			</result>
+		</global-results>
+
+		<action name="index">
+			<interceptor-ref name="costumStack_sessionChecker" />
+			<result></result>
+		</action>
+
+		<action name="list" class="ma.meditel.reporting.web.StreamListAction">
+			<interceptor-ref name="costumStack_sessionChecker" />
+			<result name="none">/pages/streamList.jsp</result>
+			<result name="success">/pages/streamList.jsp</result>
+			<result name="input">/pages/streamList.jsp</result>
+		</action>
+		
+		<action name="graphe" class="ma.meditel.reporting.web.StreamGrapheAction">
+			<interceptor-ref name="costumStack_sessionChecker" />
+			<result name="none">/pages/StreamGraphe.jsp</result>
+			<result name="success">/pages/StreamGraphe.jsp</result>
+			<result name="input">/pages/StreamGraphe.jsp</result>
+		</action>
+	</package>
+	
+	<package name="saturation" namespace="/saturation" extends="default_for_interceptors">
+		<default-action-ref name="index" />
+
+		<global-results>
+			<result name="login" type="redirectAction">
+				<param name="namespace">/</param>
+				<param name="actionName">login</param>
+			</result>
+			<result name="error" type="redirectAction">
+				<param name="namespace">/</param>
+				<param name="actionName">index</param>
+			</result>
+		</global-results>
+
+		<action name="index">
+			<interceptor-ref name="costumStack_sessionChecker" />
+			<result></result>
+		</action>
+
+		<action name="detection" class="ma.meditel.reporting.web.DetecterLaSaturationAction">
+			<interceptor-ref name="costumStack_sessionChecker" />
+			<result name="none">/pages/saturationList.jsp</result>
+			<result name="success">/pages/saturationList.jsp</result>
+			<result name="input">/pages/saturationList.jsp</result>
+		</action>
+		
+		<action name="inOutGraphe" class="ma.meditel.reporting.web.TrafficsInOutGrapheAction">
+			<interceptor-ref name="costumStack_sessionChecker" />
+			<result name="none">/pages/graphe.jsp</result>
+			<result name="GrapheNotification">/pages/grapheSaturation.jsp</result>
+			<result name="success">/pages/graphe.jsp</result>
+			<result name="input">/pages/graphe.jsp</result>
+		</action>
+		
+		<action name="perClassGraphe" class="ma.meditel.reporting.web.TrafficsPerClassGrapheAction">
+			<interceptor-ref name="costumStack_sessionChecker" />
+			<result name="none">/pages/graphe.jsp</result>
+			<result name="GrapheNotification">/pages/grapheSaturation.jsp</result>
+			<result name="success">/pages/graphe.jsp</result>
+			<result name="input">/pages/graphe.jsp</result>
+		</action>
+		
+	</package>
+	
+	<package name="support" namespace="/support" extends="default_for_interceptors">
+		<default-action-ref name="index" />
+
+		<global-results>
+			<result name="login" type="redirectAction">
+				<param name="namespace">/</param>
+				<param name="actionName">login</param>
+			</result>
+			<result name="error" type="redirectAction">
+				<param name="namespace">/</param>
+				<param name="actionName">index</param>
+			</result>
+		</global-results>
+
+		<action name="index">
+			<interceptor-ref name="costumStack_sessionChecker" />
+			<result></result>
+		</action>
+
+		<action name="aide" class="ma.meditel.reporting.web.StreamListAction">
+			<interceptor-ref name="costumStack_sessionChecker" />
+			<result name="none">/pages/support_aide.jsp</result>
+			<result name="success">/pages/support_aide.jsp</result>
+			<result name="input">/pages/support_aide.jsp</result>
+		</action>
+		
+		<action name="report" class="ma.meditel.reporting.web.BugAmeliorationReportAction" >
+			<interceptor-ref name="costumStack_sessionChecker" />
+			<result name="none">/pages/support_bug_amelioration.jsp</result>
+			<result name="success">/pages/support_bug_amelioration.jsp</result>
+			<result name="input">/pages/support_bug_amelioration.jsp</result>
+		</action>
+		
+		<action name="isIE"  >
+			<result >/pages/support_is_IE.jsp</result>
+		</action>
+		
+		<action name="about"  >
+			<interceptor-ref name="costumStack_sessionChecker" />
+			<result >/pages/about/support_about.jsp</result>
+		</action>
+	</package>
+</struts>

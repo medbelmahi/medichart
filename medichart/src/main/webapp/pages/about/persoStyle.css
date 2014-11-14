@@ -1,0 +1,64 @@
+html{
+	resize: none;
+}
+
+body {
+	background-color: #c90032;
+	font: 13px/1.5 Tahoma, Helvetica, Arial, 'Liberation Sans', FreeSans, sans-serif;
+}
+
+#logoImage{
+	width: 60%;
+}
+
+#container{
+	width: 760px;
+	display: inline-block;
+}
+#container-logoDescription{
+	float: none;
+}
+
+#col-md-4{
+	width: 250px;
+	display:inline;
+	float: left;
+}
+
+#col-md-8{
+	width: 500px;
+	display:inline;
+	float: left;
+	
+	color: #FFFFFF;
+	
+}
+
+a{
+	color: black;
+}
+
+a:hover{
+	color: #FFFF00;
+}
+
+#logoImage{
+	margin-top: 77px;
+	margin-left: 45px;
+}
+
+#desctiption-text{
+	padding-left : 13px;
+}
+#footer{
+	-webkit-border-radius:5px;
+	-moz-border-radius:5px;
+	border-radius:5px;
+	background-color:#F5F5F5;
+	padding:10px;
+	width: 700px;
+	margin:  10px auto;
+	margin-left : 23px;
+	display:inline-block;
+		float: none;
+}

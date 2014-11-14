@@ -1,0 +1,56 @@
+@media (max-width: 1020px) and (min-width: 0px){
+	#chartLegend{
+	width: 240px;
+	display: inline;
+	float: left;
+	margin-left: 10px;
+}
+
+#chartDiv{
+	width: 75%;
+	display: inline;
+	float: left;
+	margin-left: 10px;
+}
+
+}
+
+
+@media (min-width: 1020px) and (max-width: 1235px)
+{
+	#chartLegend{
+	width: 240px;
+	display: inline;
+	float: left;
+	margin-left: 10px;
+}
+
+#chartDiv{
+	width: 75%;
+
+	display: inline;
+	float: left;
+	margin-left: 10px;
+}
+
+
+}
+
+@media (min-width: 1235px)
+{
+	#chartLegend{
+	width: 20%;
+	display: inline;
+	float: left;
+	margin-left: 10px;
+}
+
+#chartDiv{
+	width: 76%;
+
+	display: inline;
+	float: left;
+	margin-left: 10px;
+}
+
+}

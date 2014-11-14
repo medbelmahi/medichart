@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-configuration PUBLIC
+        "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+        "http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
+        
+<hibernate-configuration>
+    <session-factory>
+        
+        <!-- Database connection settings -->
+        <property name="connection.driver_class">com.mysql.jdbc.Driver</property>
+<!--         <property name="connection.url">jdbc:mysql://localhost:3306/DB_MEDITEL_PROJET_2</property> -->
+<!--         <property name="connection.url">jdbc:mysql://localhost:3306/db_medi_last_version</property> -->
+        <property name="connection.url">jdbc:mysql://127.1.252.130:3306/medichart</property>
+        <property name="connection.username">adminUEXnJeU</property>
+        <property name="connection.password">IhbXsEVsaDmY</property>
+  
+        <!-- JDBC connection pool (use the built-in) -->
+        <property name="connection.pool_size">1</property>
+        
+        <!-- SQL dialect -->
+        <property name="dialect">org.hibernate.dialect.MySQLDialect</property>
+        
+        <!-- Enable Hibernate's automatic session context management -->
+        <property name="current_session_context_class">thread</property>
+        
+        <!-- Disable the second-level cache  -->
+        <property name="cache.provider_class">org.hibernate.cache.NoCacheProvider</property>
+        
+        <property name="cache.use_second_level_cache">false</property>
+        
+        <!-- Echo all executed SQL to stdout -->
+        <property name="show_sql">false</property> 
+        
+        <!-- Drop and re-create the database schema on startup -->
+        
+<!--          <property name="hbm2ddl.auto">update</property>  -->
+         
+        <!-- <mapping resource="dao/Cargaison.hbm.xml"/> -->
+        
+        <!-- Names the annotates entity class -->
+		<mapping class="ma.meditel.reporting.entities.User"/>	
+		<mapping class="ma.meditel.reporting.entities.Admin"/>	
+		<mapping class="ma.meditel.reporting.entities.Guest"/>	
+		<mapping class="ma.meditel.reporting.entities.Interface"/>	
+		<mapping class="ma.meditel.reporting.entities.Node"/>	
+		<mapping class="ma.meditel.reporting.entities.Traffic"/>
+		<mapping class="ma.meditel.reporting.entities.TrafficClassification"/>
+		<mapping class="ma.meditel.reporting.entities.TClasse"/>
+		<mapping class="ma.meditel.reporting.entities.SystemObject"/>	
+		<mapping class="ma.meditel.reporting.entities.ChargeCpu"/>	
+		<mapping class="ma.meditel.reporting.entities.InterfacePhysic"/>	
+		<mapping class="ma.meditel.reporting.entities.InterfaceAutorizedAlias"/>	
+		<mapping class="ma.meditel.reporting.entities.Stream"/>	
+		<mapping class="ma.meditel.reporting.entities.BugAmelioration"/>	
+		<mapping class="ma.meditel.reporting.entities.SystemFTP"/>	
+		<mapping class="ma.meditel.reporting.entities.TrafficNotification"/>	
+  		
+    </session-factory>
+</hibernate-configuration>
